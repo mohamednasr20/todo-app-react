@@ -1,18 +1,28 @@
 import React, { Component } from 'react';
 import NewTodoForm from './NewTodoForm';
+import Todo from './Todo';
 
 class TodoList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = { todoes: [] };
 		this.addTodo = this.addTodo.bind(this);
+		this.removeTask = this.removeTask.bind(this);
+		this.updateTask = this.updateTask.bind(this);
 	}
 
-	handleClick(id) {
-		this.removeTodo(id);
+	updateTask(task, id) {
+		let newTodoes = this.state.todoes.map((todo) => {
+			if (todo.id === id) {
+				return { ...todo, todo: task };
+			}
+
+			return todo;
+		});
+		this.setState({ todoes: newTodoes });
 	}
 
-	removeTodo(id) {
+	removeTask(id) {
 		let newTodoes = this.state.todoes.filter((todo) => todo.id !== id);
 
 		this.setState({ todoes: newTodoes });
@@ -23,9 +33,7 @@ class TodoList extends Component {
 	}
 	render() {
 		const todoes = this.state.todoes.map((todo) => (
-			<li key={todo.id} id={todo.id}>
-				{todo.todo} <button onClick={() => this.handleClick(todo.id)}>X</button>
-			</li>
+			<Todo key={todo.id} id={todo.id} todo={todo.todo} removeTask={this.removeTask} update={this.updateTask} />
 		));
 		return (
 			<div>
